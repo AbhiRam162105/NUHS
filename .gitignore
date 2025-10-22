@@ -1,0 +1,206 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.sublime-project
+.sublime-workspace
+*.code-workspace
+.project
+.pydevproject
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+.jupyter/
+
+# Testing
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Data and outputs
+data/output/
+data/input/
+results/
+logs/
+*.log
+*.csv
+*.json
+
+# Large files
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.flv
+*.wmv
+*.wav
+*.mp3
+*.zip
+*.tar
+*.tar.gz
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+.~*
+
+# OS specific
+.DS_Store
+Thumbs.db
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# MacOS
+.AppleDouble
+.LSOverride
+*.local
+
+# Spyder IDE
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Local development
+local_config.yaml
+*.local.yaml
+test_data/
+temp/
+
+# IDE temporary files
+*.sublime-project
+*.sublime-workspace
+
+# VS Code settings
+.vscode/settings.json
+.vscode/launch.json
+
+# Python environment
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Matplotlib
+*.png.cache
+matplotlibrc.local
+
+# Pytest
+.pytest_cache/
+pytest.ini.local
+
+# Documentation build files
+docs/_build/
+docs/.doctrees/
+
+# Compiled documentation
+*.pdf
+
+# Research/experimental files
+experiments/
+research/
+sandbox/
+scratch/
+
+# Configuration backups
+*.yaml.bak
+*.yml.bak
+
+# Generated model files
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.model
+*.pth
+*.pt
+
+# Cache files
+*.cache
+.cache/
+__pycache__/
+*.pyc
+
+# IDEs
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Keep important config and documentation
+!config/
+!README*.md
+!*_FIXES.md
+!*_NOTES.md
+!QUICK_REFERENCE.txt
+!CODE_CHANGES.md

@@ -80,7 +80,7 @@ class ActiveContourDetector:
             alpha=self.config['alpha'],
             beta=self.config['beta'],
             gamma=self.config['gamma'],
-            max_iterations=self.config['max_iterations'],
+            max_num_iter=self.config['max_iterations'],
             convergence=self.config['convergence_threshold'],
             boundary_condition=self.config['bc']
         )

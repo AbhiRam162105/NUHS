@@ -120,7 +120,7 @@ boundary_detection:
 refinement:
   # Fusion method
   fusion_method: 'voting'  # Options: 'voting', 'weighted_average', 'confidence_based'
-  voting_threshold: 2  # Number of methods that must agree
+  voting_threshold: 1  # Number of methods that must agree (was 2, more lenient)
 
   # Detector weights (for weighted fusion)
   detector_weights:
@@ -142,9 +142,9 @@ refinement:
   fit_shape: 'none'  # Options: 'none', 'ellipse', 'circle'
 
   # Quality filtering
-  min_circularity: 0.4
+  min_circularity: 0.2  # More lenient for vessels (was 0.4)
   max_circularity: 1.0
-  min_area: 100
+  min_area: 50  # More lenient (was 100)
   max_area: 1000000
 
   # Smoothing
@@ -175,8 +175,8 @@ tracking:
   measurement_noise: 0.1
 
   # Temporal consistency
-  max_displacement_per_frame: 25  # pixels
-  max_area_change_percent: 0.30   # 30%
+  max_displacement_per_frame: 50  # pixels (was 25, more lenient for dynamic vessels)
+  max_area_change_percent: 1.0    # 100% (was 0.30, for compression events)
 
   # Tracking confidence
   min_confidence: 0.5

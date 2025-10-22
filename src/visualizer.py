@@ -260,6 +260,31 @@ class BoundaryVisualizer:
                    self.config['font'], 0.7,
                    self.config['compression_color'], 2)
 
+    def _convert_to_serializable(self, obj):
+        """
+        Recursively convert numpy types to native Python types for JSON serialization.
+
+        Args:
+            obj: Object to convert
+
+        Returns:
+            Serializable version of the object
+        """
+        if isinstance(obj, dict):
+            return {key: self._convert_to_serializable(value) for key, value in obj.items()}
+        elif isinstance(obj, (list, tuple)):
+            return [self._convert_to_serializable(item) for item in obj]
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, (np.integer, np.floating)):
+            return obj.item()
+        elif isinstance(obj, (np.bool_, np.bool8)):
+            return bool(obj)
+        elif obj is None:
+            return None
+        else:
+            return obj
+
     def export_metrics_csv(self, results: List[Dict], filename: str = "metrics.csv"):
         """
         Export metrics to CSV file.
@@ -306,14 +331,10 @@ class BoundaryVisualizer:
         """
         output_path = self.output_dir / filename
 
-        # Convert numpy arrays to lists for JSON serialization
+        # Convert numpy arrays and types to native Python types for JSON serialization
         json_data = []
         for result in results:
-            result_copy = result.copy()
-
-            if 'contour' in result_copy and result_copy['contour'] is not None:
-                result_copy['contour'] = result_copy['contour'].tolist()
-
+            result_copy = self._convert_to_serializable(result)
             json_data.append(result_copy)
 
         with open(output_path, 'w') as f:
