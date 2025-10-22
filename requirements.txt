@@ -1,0 +1,25 @@
+# Core dependencies
+numpy>=1.21.0
+opencv-python>=4.5.0
+scikit-image>=0.19.0
+scipy>=1.7.0
+
+# Configuration
+pyyaml>=5.4.0
+
+# Visualization
+matplotlib>=3.4.0
+
+# Progress bar
+tqdm>=4.62.0
+
+# Optional: Jupyter for notebooks
+jupyter>=1.0.0
+ipykernel>=6.0.0
+ipywidgets>=7.6.0
+
+# Optional: Additional image processing
+Pillow>=8.3.0
+
+# Optional: Video codec support
+# opencv-contrib-python>=4.5.0  # Uncomment for additional OpenCV modules

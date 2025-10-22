@@ -1,0 +1,234 @@
+# Ultrasound Boundary Detection Pipeline Configuration
+
+# Preprocessing parameters
+preprocessing:
+  # Speckle reduction
+  median_kernel_size: 5
+  gaussian_sigma: 1.2
+  denoise_weight: 0.1
+  denoise_enabled: false  # Set to true for anisotropic diffusion (slower)
+
+  # Contrast enhancement (CLAHE)
+  clahe_clip_limit: 2.0
+  clahe_tile_size: [8, 8]
+
+  # Morphological preprocessing
+  tophat_kernel_size: 15
+  blackhat_kernel_size: 15
+  morphological_enabled: true
+
+  # Output normalization
+  normalize_output: true
+
+# ROI Detection parameters
+roi_detection:
+  # Thresholding
+  threshold_method: 'otsu'  # Options: 'otsu', 'adaptive', 'multi_otsu'
+  invert_threshold: true  # True for dark vessels (anechoic)
+
+  # Component filtering
+  min_area: 500
+  max_area: 100000
+  min_circularity: 0.3
+  max_circularity: 1.0
+  min_aspect_ratio: 0.3
+  max_aspect_ratio: 3.0
+
+  # ROI expansion
+  padding_percent: 0.25  # Add 25% padding
+
+  # Morphological operations
+  morph_open_kernel: 5
+  morph_close_kernel: 11
+
+  # Fallback if no ROI detected
+  use_center_fallback: true
+  fallback_size_percent: 0.6
+
+# Boundary Detection parameters
+boundary_detection:
+  # Which methods to use (comment out to disable)
+  methods:
+    - canny
+    - active_contour
+    - watershed
+    # - level_set  # Slower but more accurate
+
+  # Canny edge detector
+  canny:
+    canny_low_threshold_ratio: 0.5
+    canny_high_threshold_ratio: 1.5
+    canny_aperture: 3
+    canny_l2_gradient: true
+    sobel_kernel_size: 3
+    sobel_threshold_percentile: 75
+    dilate_edges: true
+    dilation_kernel_size: 3
+    use_nms: true
+
+  # Active contour (snakes)
+  active_contour:
+    alpha: 0.015  # Elasticity
+    beta: 10      # Rigidity
+    gamma: 0.001  # Step size
+    max_iterations: 2000
+    convergence_threshold: 0.1
+    init_method: 'circular'  # Options: 'circular', 'edge_based', 'roi_center'
+    init_radius_ratio: 0.4
+    init_num_points: 100
+    gaussian_blur_sigma: 2.0
+    bc: 'periodic'
+    use_multiscale: false
+    scales: [0.5, 1.0]
+
+  # Watershed segmentation
+  watershed:
+    threshold_method: 'otsu'
+    manual_threshold: 127
+    invert: true
+    distance_transform_type: 2  # cv2.DIST_L2
+    distance_mask_size: 5
+    min_distance_between_peaks: 20
+    peak_footprint_size: 3
+    apply_opening: true
+    opening_kernel_size: 3
+    apply_closing: true
+    closing_kernel_size: 5
+    compactness: 0.0
+    extract_vessel_region: true
+    min_region_area: 100
+
+  # Level set method
+  level_set:
+    method: 'chan_vese'  # Options: 'chan_vese', 'geodesic', 'custom'
+    chan_vese_iterations: 200
+    chan_vese_smoothing: 3
+    chan_vese_lambda1: 1.0
+    chan_vese_lambda2: 1.0
+    gac_iterations: 100
+    gac_smoothing: 1
+    gac_threshold: 'auto'
+    gac_balloon: 1
+    init_method: 'checkerboard'
+    init_disk_radius_ratio: 0.4
+    dt: 0.5
+    mu: 0.2
+    nu: 0.0
+    lambda: 5.0
+
+# Boundary Refinement parameters
+refinement:
+  # Fusion method
+  fusion_method: 'voting'  # Options: 'voting', 'weighted_average', 'confidence_based'
+  voting_threshold: 2  # Number of methods that must agree
+
+  # Detector weights (for weighted fusion)
+  detector_weights:
+    canny: 0.2
+    active_contour: 0.3
+    watershed: 0.25
+    level_set: 0.25
+
+  # Morphological refinement
+  apply_morphological: true
+  morph_close_kernel: 5
+  morph_open_kernel: 3
+
+  # Contour approximation
+  approximate_contour: true
+  approx_epsilon_ratio: 0.005
+
+  # Shape fitting
+  fit_shape: 'none'  # Options: 'none', 'ellipse', 'circle'
+
+  # Quality filtering
+  min_circularity: 0.4
+  max_circularity: 1.0
+  min_area: 100
+  max_area: 1000000
+
+  # Smoothing
+  smooth_boundary: true
+  smoothing_window: 5
+
+# Temporal Tracking parameters
+tracking:
+  # Optical flow method
+  optical_flow_method: 'lucas_kanade'  # Options: 'lucas_kanade', 'farneback'
+
+  # Lucas-Kanade parameters
+  lk_win_size: [15, 15]
+  lk_max_level: 2
+  lk_criteria: [3, 10, 0.03]  # [type, maxCount, epsilon]
+
+  # Farneback parameters
+  fb_pyr_scale: 0.5
+  fb_levels: 3
+  fb_winsize: 15
+  fb_iterations: 3
+  fb_poly_n: 5
+  fb_poly_sigma: 1.2
+
+  # Kalman filter
+  use_kalman: true
+  process_noise: 0.05
+  measurement_noise: 0.1
+
+  # Temporal consistency
+  max_displacement_per_frame: 25  # pixels
+  max_area_change_percent: 0.30   # 30%
+
+  # Tracking confidence
+  min_confidence: 0.5
+  confidence_decay: 0.95
+
+  # History
+  history_length: 10
+
+  # Re-initialization
+  reinit_on_lost: true
+  lost_threshold: 0.3
+
+# Visualization parameters
+visualization:
+  # Video output
+  output_fps: 30
+  output_codec: 'mp4v'
+  boundary_color: [0, 255, 0]  # Green (BGR)
+  boundary_thickness: 2
+  show_roi: true
+  roi_color: [255, 0, 0]  # Red (BGR)
+  roi_thickness: 1
+
+  # Confidence visualization
+  show_confidence: true
+  low_confidence_color: [0, 0, 255]   # Red (BGR)
+  high_confidence_color: [0, 255, 0]  # Green (BGR)
+
+  # Metrics overlay
+  show_metrics: true
+  font_scale: 0.5
+  font_thickness: 1
+  text_color: [255, 255, 255]  # White (BGR)
+
+  # Compression events
+  highlight_compression: true
+  compression_color: [255, 165, 0]  # Orange (BGR)
+
+  # Plots
+  plot_dpi: 100
+  plot_figsize: [12, 8]
+
+# Output parameters
+output:
+  directory: 'data/output'
+  save_video: true
+  save_metrics: true
+  save_plots: true
+  save_keyframes: true
+
+# Processing parameters
+processing:
+  sample_rate: 1        # Process every Nth frame (1 = all frames)
+  max_frames: null      # Maximum frames to process (null = all)
+  use_multiprocessing: false  # Enable parallel processing (experimental)
